@@ -7,6 +7,7 @@ const toDateKey = (dateObj) => dayjs(dateObj).format('YYYY-MM-DD');
 export default function CalendarGrid({ month, bookingsByDate, onSelectDate }) {
   const firstDay = month.startOf('month');
   const start = firstDay.startOf('week');
+  const today = dayjs().startOf('day');
   const days = Array.from({ length: 42 }, (_, index) => start.add(index, 'day'));
 
   return (
@@ -24,14 +25,16 @@ export default function CalendarGrid({ month, bookingsByDate, onSelectDate }) {
           const dayKey = toDateKey(day);
           const dayBookings = bookingsByDate[dayKey] || [];
           const isOutsideMonth = day.month() !== month.month();
+          const isPastDay = day.isBefore(today, 'day');
+          const isDisabled = isOutsideMonth || isPastDay;
 
           return (
             <button
               key={dayKey}
               type="button"
               className={`day-card ${isOutsideMonth ? 'outside' : ''}`}
-              onClick={() => !isOutsideMonth && onSelectDate(dayKey)}
-              disabled={isOutsideMonth}
+              onClick={() => !isDisabled && onSelectDate(dayKey)}
+              disabled={isDisabled}
             >
               <div className="day-top">
                 <span className="day-number">{day.date()}</span>

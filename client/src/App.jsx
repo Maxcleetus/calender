@@ -34,6 +34,11 @@ export default function App() {
   }, [bookings]);
 
   const handleCreateBooking = async (payload) => {
+    if (dayjs(payload.date).isBefore(dayjs().startOf('day'), 'day')) {
+      setError('Booking is not allowed for previous dates.');
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');

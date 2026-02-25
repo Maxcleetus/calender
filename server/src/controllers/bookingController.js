@@ -20,9 +20,15 @@ export const createBooking = async (req, res) => {
 
     const start = toDateTime(date, startTime);
     const end = toDateTime(date, endTime);
+    const bookingDay = dayjs(date).startOf('day');
+    const today = dayjs().startOf('day');
 
     if (!start.isValid() || !end.isValid() || !end.isAfter(start)) {
       return res.status(400).json({ message: 'Invalid date or time range.' });
+    }
+
+    if (bookingDay.isBefore(today)) {
+      return res.status(400).json({ message: 'Booking is not allowed for previous dates.' });
     }
 
     const conflict = await Booking.findOne({
