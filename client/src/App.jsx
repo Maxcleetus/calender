@@ -53,7 +53,7 @@ export default function App() {
       <main className="container">
         <header className="top-bar">
           <div>
-            <h1>St. Michael Church Booking</h1>
+            <h1>St Antony Church Booking</h1>
             <p>Reserve a prayer or counseling slot with the parish priest.</p>
           </div>
           <div className="month-controls">
