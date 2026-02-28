@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 const initialForm = {
   name: '',
-  email: '',
-  phone: '',
+  mobileNumber: '',
   intention: '',
+  program: '',
   startTime: '09:00',
   endTime: '09:30'
 };
@@ -49,14 +49,26 @@ export default function BookingModal({ selectedDate, dayBookings, onClose, onSub
 
         <form onSubmit={handleSubmit} className="booking-form">
           <input name="name" placeholder="Your full name" value={form.name} onChange={handleChange} required />
-          <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-          <input name="phone" placeholder="Phone" value={form.phone} onChange={handleChange} required />
+          <input
+            name="mobileNumber"
+            placeholder="Mobile number"
+            value={form.mobileNumber}
+            onChange={handleChange}
+          />
           <textarea
             name="intention"
             rows="3"
             placeholder="Prayer/visit intention"
             value={form.intention}
             onChange={handleChange}
+            required
+          />
+          <input
+            name="program"
+            placeholder="Program"
+            value={form.program}
+            onChange={handleChange}
+            required
           />
 
           <div className="time-row">

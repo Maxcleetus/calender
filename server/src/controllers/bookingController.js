@@ -2,24 +2,40 @@ import dayjs from 'dayjs';
 import { Booking } from '../models/Booking.js';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
+const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/;
 
 const toDateTime = (date, time) => dayjs(`${date}T${time}:00`);
 
 export const createBooking = async (req, res) => {
   try {
-    const { name, email, phone, intention = '', date, startTime, endTime } = req.body;
+    const name = String(req.body.name || '').trim();
+    const mobileNumber = String(
+      req.body.mobileNumber ?? req.body.phone ?? req.body.mobile ?? req.body['mobile number'] ?? ''
+    ).trim();
+    const intention = String(req.body.intention || '').trim();
+    const program = String(req.body.program || '').trim();
+    const date = String(req.body.date || '').trim();
+    const startTime = String(req.body.startTime || '').trim();
+    const endTime = String(req.body.endTime || '').trim();
 
-    if (!name || !email || !phone || !date || !startTime || !endTime) {
-      return res.status(400).json({ message: 'Please fill all required fields.' });
+    const missingFields = ['name', 'intention', 'program', 'date', 'startTime', 'endTime'].filter((field) => {
+      const value = { name, intention, program, date, startTime, endTime }[field];
+      return !value;
+    });
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({ message: `Missing required fields: ${missingFields.join(', ')}` });
     }
 
     if (!DATE_RE.test(date) || !TIME_RE.test(startTime) || !TIME_RE.test(endTime)) {
       return res.status(400).json({ message: 'Date or time format is invalid.' });
     }
 
-    const start = toDateTime(date, startTime);
-    const end = toDateTime(date, endTime);
+    const normalizedStartTime = startTime.slice(0, 5);
+    const normalizedEndTime = endTime.slice(0, 5);
+
+    const start = toDateTime(date, normalizedStartTime);
+    const end = toDateTime(date, normalizedEndTime);
     const bookingDay = dayjs(date).startOf('day');
     const today = dayjs().startOf('day');
 
@@ -44,15 +60,15 @@ export const createBooking = async (req, res) => {
 
     const booking = await Booking.create({
       name,
-      email,
-      phone,
+      mobileNumber,
       intention,
+      program,
       date,
-      startTime,
-      endTime,
+      startTime: normalizedStartTime,
+      endTime: normalizedEndTime,
       startDateTime: start.toDate(),
       endDateTime: end.toDate(),
-      status: 'confirmed'
+      status: 'pending'
     });
 
     return res.status(201).json(booking);
@@ -96,7 +112,7 @@ export const getAdminBookings = async (req, res) => {
       query.startDateTime = { $gte: start.toDate(), $lte: end.toDate() };
     }
 
-    if (status && ['confirmed', 'cancelled'].includes(status)) {
+    if (status && ['pending', 'confirmed', 'rejected'].includes(status)) {
       query.status = status;
     }
 
@@ -112,7 +128,7 @@ export const updateBookingStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    if (!['confirmed', 'cancelled'].includes(status)) {
+    if (!['pending', 'confirmed', 'rejected'].includes(status)) {
       return res.status(400).json({ message: 'Invalid status.' });
     }
 

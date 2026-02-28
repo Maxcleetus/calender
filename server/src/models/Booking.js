@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 const bookingSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
-    email: { type: String, required: true, trim: true },
-    phone: { type: String, required: true, trim: true },
-    intention: { type: String, default: '', trim: true },
+    mobileNumber: { type: String, default: '', trim: true },
+    intention: { type: String, required: true, trim: true },
+    program: { type: String, required: true, trim: true },
     date: { type: String, required: true },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
@@ -13,8 +13,8 @@ const bookingSchema = new mongoose.Schema(
     endDateTime: { type: Date, required: true },
     status: {
       type: String,
-      enum: ['confirmed', 'cancelled'],
-      default: 'confirmed'
+      enum: ['pending', 'confirmed', 'rejected'],
+      default: 'pending'
     }
   },
   { timestamps: true }

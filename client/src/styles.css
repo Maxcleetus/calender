@@ -145,25 +145,50 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.35rem;
   margin-bottom: 0.35rem;
 }
 
 .day-number {
   font-weight: 700;
+  min-width: 0;
 }
 
 .booking-count {
+  min-width: 0;
   color: var(--ok);
   font-size: 0.76rem;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .booking-pill {
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  width: 100%;
   font-size: 0.77rem;
   margin-bottom: 0.25rem;
   padding: 0.25rem 0.35rem;
   border-radius: 8px;
   background: #fff0e5;
   border: 1px solid #f4cfaf;
+  overflow: hidden;
+}
+
+.pill-time {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.pill-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .booking-pill.confirmed {
@@ -171,7 +196,13 @@ h3 {
   border-color: #b9e3c8;
 }
 
-.booking-pill.cancelled {
+.booking-pill.pending {
+  background: #fff7df;
+  border-color: #f0d293;
+  color: #7f5a00;
+}
+
+.booking-pill.rejected {
   background: #f4f4f4;
   border-color: #dadada;
   color: #7f7f7f;
@@ -198,13 +229,41 @@ h3 {
   background: var(--accent-2);
 }
 
-.error-banner {
+.notification {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  width: min(420px, calc(100vw - 2rem));
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.error-notification {
   background: #ffe1d9;
   border: 1px solid #f4b4a1;
   color: #7d2e14;
-  border-radius: 10px;
-  padding: 0.6rem 0.8rem;
-  margin-bottom: 0.8rem;
+}
+
+.notification-close {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.1rem 0.2rem;
+  border-radius: 6px;
+}
+
+.notification-close:hover {
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .flow-note {
@@ -289,7 +348,13 @@ h3 {
   border-color: #b9e3c8;
 }
 
-.modal-booking-pill.cancelled {
+.modal-booking-pill.pending {
+  background: #fff7df;
+  border-color: #f0d293;
+  color: #7f5a00;
+}
+
+.modal-booking-pill.rejected {
   background: #f4f4f4;
   border-color: #dadada;
   color: #7f7f7f;
@@ -356,5 +421,21 @@ h3 {
 
   .booking-pill {
     font-size: 0.68rem;
+    padding: 0.2rem 0.3rem;
+  }
+
+  .booking-count {
+    font-size: 0.66rem;
+  }
+
+  .count-label {
+    display: none;
+  }
+
+  .notification {
+    left: 0.75rem;
+    right: 0.75rem;
+    width: auto;
+    top: 0.75rem;
   }
 }

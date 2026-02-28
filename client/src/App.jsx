@@ -25,6 +25,12 @@ export default function App() {
     loadBookings();
   }, [month]);
 
+  useEffect(() => {
+    if (!error) return;
+    const timer = setTimeout(() => setError(''), 4000);
+    return () => clearTimeout(timer);
+  }, [error]);
+
   const bookingsByDate = useMemo(() => {
     return bookings.reduce((acc, booking) => {
       if (!acc[booking.date]) acc[booking.date] = [];
@@ -72,8 +78,6 @@ export default function App() {
           </div>
         </header>
 
-        {error ? <div className="error-banner">{error}</div> : null}
-
         <section className="flow-note">
           <strong>Step 1:</strong> Select a date from calendar.
           <br />
@@ -99,6 +103,15 @@ export default function App() {
           onSubmit={handleCreateBooking}
           loading={loading}
         />
+      ) : null}
+
+      {error ? (
+        <div className="notification error-notification" role="alert" aria-live="assertive">
+          <span>{error}</span>
+          <button type="button" className="notification-close" onClick={() => setError('')} aria-label="Dismiss">
+            x
+          </button>
+        </div>
       ) : null}
     </div>
   );

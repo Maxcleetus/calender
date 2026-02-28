@@ -38,14 +38,21 @@ export default function CalendarGrid({ month, bookingsByDate, onSelectDate }) {
             >
               <div className="day-top">
                 <span className="day-number">{day.date()}</span>
-                {dayBookings.length > 0 ? <span className="booking-count">{dayBookings.length} entries</span> : null}
+                {dayBookings.length > 0 ? (
+                  <span className="booking-count">
+                    <span className="count-value">{dayBookings.length}</span>
+                    <span className="count-label"> entries</span>
+                  </span>
+                ) : null}
               </div>
 
               <div className="booking-list">
                 {dayBookings.slice(0, 3).map((booking) => (
                   <div key={booking._id} className={`booking-pill ${booking.status}`}>
-                    {booking.startTime}-{booking.endTime} {booking.name}
-                    {' · '}
+                    <span className="pill-time">
+                      {booking.startTime}-{booking.endTime}
+                    </span>
+                    <span className="pill-name">{booking.name}</span>
                     <strong>{booking.status}</strong>
                   </div>
                 ))}
